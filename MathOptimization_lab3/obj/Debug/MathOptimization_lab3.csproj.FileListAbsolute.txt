@@ -1,0 +1,7 @@
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\bin\Debug\MathOptimization_lab3.exe.config
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\bin\Debug\MathOptimization_lab3.exe
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\bin\Debug\MathOptimization_lab3.pdb
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\obj\Debug\MathOptimization_lab3.csprojAssemblyReference.cache
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\obj\Debug\MathOptimization_lab3.csproj.CoreCompileInputs.cache
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\obj\Debug\MathOptimization_lab3.exe
+C:\Users\igor3\source\repos\MathOptimization_lab3\MathOptimization_lab3\obj\Debug\MathOptimization_lab3.pdb
