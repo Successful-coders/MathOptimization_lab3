@@ -8,8 +8,13 @@ namespace MathOptimization_lab3
 {
     class Program
     {
+        public static int functionCallCount;
+
+
         private static double CalculateF(double x, double y)
         {
+            functionCallCount++;
+
             return 5 * Math.Pow(x + y, 2) + Math.Pow(x - 2, 2);
         }
         private static double CalculateRestrictionG(double x, double y)
@@ -23,6 +28,8 @@ namespace MathOptimization_lab3
 
         private static double CalculateF1(double x, double y)
         {
+            functionCallCount++;
+
             return Math.Pow(x + y, 2) + 4 * Math.Pow(y, 2);
         }
         private static double CalculateRestrictionG1(double x, double y)
@@ -37,17 +44,20 @@ namespace MathOptimization_lab3
 
         static void Main(string[] args)
         {
+            functionCallCount = 0;
+
             double[] resulVector2 = PenaltyMethod.FindMinPenalty(CalculateF, CalculateRestrictionG, CalculateRestrictionH,
-                1.0E-7d, new double[2] { -10.0d, 10.0d },
-                PenaltyMethod.CalculatePenaltyFunctionG2, PenaltyMethod.CalculatePenaltyFunctionH2,
+                1.0E-7d, new double[2] { 0, 0 },
+                PenaltyMethod.CalculatePenaltyFunctionG1, PenaltyMethod.CalculatePenaltyFunctionH2,
                 2);
 
             //double[] resulVector2 = PenaltyMethod.FindMinBarrier(CalculateF, CalculateRestrictionG,
-            //    1.0E-7d, new double[2] { 10.0d, 10.0d },
-            //    PenaltyMethod.CalculateBarrierFunctionG1,
+            //    1.0E-6d, new double[2] { 1.1d, 1.2d },
+            //    PenaltyMethod.CalculateBarrierFunctionG2,
             //    1000, 0.5d);
 
-            Console.WriteLine($"\nresult = ({resulVector2[0]}; {resulVector2[1]})");
+            Console.WriteLine($"\nresult = f({resulVector2[0].ToString("e5")}; {resulVector2[1].ToString("e5")}) = {CalculateF(resulVector2[0], resulVector2[1]).ToString("e5")}");
+            Console.WriteLine("Function call count = " + functionCallCount);
         }
     }
 }
