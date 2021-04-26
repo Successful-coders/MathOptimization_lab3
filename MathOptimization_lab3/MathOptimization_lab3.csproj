@@ -44,9 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delegates.cs" />
-    <Compile Include="HookeJeevesMethod.cs" />
+    <Compile Include="HookeJeevesMethodDone.cs" />
     <Compile Include="PenaltyMethod.cs" />
-    <Compile Include="PowellMethod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

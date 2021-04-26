@@ -9,15 +9,15 @@ namespace MathOptimization_lab3
     class PenaltyMethod
     {
         public delegate double PenaltyFunction(Function2 function, double x, double y);
+        public delegate double BarrierFunction(Function2 function, double x, double y);
 
 
-        public static double[] FindMin(Function2 function, Function2 restrictionFunctionG, Function2 restrictionFunctionH,
-            double error,  double[] vector2x0, 
+        public static double[] FindMinPenalty(Function2 function, Function2 restrictionFunctionG, Function2 restrictionFunctionH,
+            double error,  double[] x0, 
             PenaltyFunction penaltyFunctionG, PenaltyFunction penaltyFunctionH,
             double r = 1.0d, double rFactor = 2.0d)
         {
             int iterationIndex = 1;
-            double[] vector2minX;
 
             do
             {
@@ -29,23 +29,52 @@ namespace MathOptimization_lab3
 
                 Console.WriteLine("\nk = " + iterationIndex);
 
-                HookeJeevesMethod hookeJeevesMethod = new HookeJeevesMethod();
-                vector2minX = hookeJeevesMethod.Start((x, y) =>
+                x0 = HookeJeevesMethod.FindMin((x, y) =>
                 {
-                    return function(x, y) + ( r * (penaltyFunctionH(restrictionFunctionH, x, y)) + penaltyFunctionG(restrictionFunctionG, x, y));
-                }, vector2x0[0], vector2x0[1], 0.01d, 0.01d, 1000, error);
-
-                vector2x0 = vector2minX;
+                    return function(x, y) + r * (penaltyFunctionH(restrictionFunctionH, x, y) + penaltyFunctionG(restrictionFunctionG, x, y));
+                }, x0, new double[] { 1.0d, 1.0d }, 2, error);
 
                 iterationIndex++;
 
-                Console.WriteLine($"f({vector2x0[0]}; {vector2x0[1]}) = {function(vector2x0[0], vector2x0[1])}");
-                Console.WriteLine($"g({vector2x0[0]}; {vector2x0[1]}) = {restrictionFunctionG(vector2x0[0], vector2x0[1])}");
-                Console.WriteLine($"h({vector2x0[0]}; {vector2x0[1]}) = {restrictionFunctionH(vector2x0[0], vector2x0[1])}");
+                Console.WriteLine($"f({x0[0]}; {x0[1]}) = {function(x0[0], x0[1])}");
+                Console.WriteLine($"g({x0[0]}; {x0[1]}) = {restrictionFunctionG(x0[0], x0[1])}");
+                Console.WriteLine($"h({x0[0]}; {x0[1]}) = {restrictionFunctionH(x0[0], x0[1])}");
             }
-            while (r * (penaltyFunctionH(restrictionFunctionH, vector2x0[0], vector2x0[1]) + penaltyFunctionG(restrictionFunctionG, vector2x0[0], vector2x0[1])) > error);
+            while (r * (penaltyFunctionH(restrictionFunctionH, x0[0], x0[1]) + penaltyFunctionG(restrictionFunctionG, x0[0], x0[1])) > error);
 
-            return vector2minX;
+            return x0;
+        }
+        public static double[] FindMinBarrier(Function2 function, Function2 restrictionFunctionG,
+            double error, double[] x0,
+            BarrierFunction barrierFunction,
+            double r = 1.0d, double rFactor = 2.0d)
+        {
+            int iterationIndex = 1;
+
+            do
+            {
+                if (iterationIndex > 1)
+                {
+                    r *= rFactor;
+                    //r *= r;
+                }
+
+                Console.WriteLine("\nk = " + iterationIndex);
+
+                x0 = HookeJeevesMethod.FindMin((x, y) =>
+                {
+                    return function(x, y) + r * barrierFunction(restrictionFunctionG, x, y);
+                }, x0, new double[] { 1.0d, 1.0d }, 2, error);
+
+                iterationIndex++;
+
+                Console.WriteLine($"f({x0[0]}; {x0[1]}) = {function(x0[0], x0[1])}");
+                Console.WriteLine($"g({x0[0]}; {x0[1]}) = {restrictionFunctionG(x0[0], x0[1])}");
+            }
+            while (r * barrierFunction(restrictionFunctionG, x0[0], x0[1]) > error);
+            //while (Math.Abs(restrictionFunctionG(x0[0], x0[1])) > error);
+
+            return x0;
         }
 
         public static double CalculatePenaltyFunctionG1(Function2 function, double x, double y)
@@ -72,6 +101,15 @@ namespace MathOptimization_lab3
         public static double CalculatePenaltyFunctionH10(Function2 function, double x, double y)
         {
             return Math.Pow(Math.Abs(function(x, y)), 10);
+        }
+
+        public static double CalculateBarrierFunctionG1(Function2 function, double x, double y)
+        {
+            return -1 / function(x, y);
+        }
+        public static double CalculateBarrierFunctionG2(Function2 function, double x, double y)
+        {
+            return -Math.Log(-function(x, y));
         }
     }
 }
